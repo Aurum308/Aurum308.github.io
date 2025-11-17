@@ -344,76 +344,70 @@ A new kind of token.</em></p>
     });
   });
 
- // 
-async function fetchBTCBalance() {
-  const btcAddress = "bc1qz7h6f0q5e8rzej2pay60l7lglp5dxy760j6uhc";
-  try {
-    const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${btcAddress}/balance?nocache=${Date.now()}`);
-    const data = await res.json();
-    if (data && data.final_balance !== undefined) {
-      const btc = data.final_balance / 100000000;
-      document.getElementById("btc-balance").innerText = `${btc} BTC`;
-    } else {
+  // BTC Balance
+  async function fetchBTCBalance() {
+    const btcAddress = "bc1qz7h6f0q5e8rzej2pay60l7lglp5dxy760j6uhc";
+    try {
+      const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${btcAddress}/balance?nocache=${Date.now()}`);
+      const data = await res.json();
+      if (data && data.final_balance !== undefined) {
+        const btc = data.final_balance / 100000000;
+        document.getElementById("btc-balance").innerText = `${btc} BTC`;
+      } else {
+        document.getElementById("btc-balance").innerText = "Unavailable";
+      }
+    } catch (e) {
+      console.error("BTC Fetch Error:", e);
       document.getElementById("btc-balance").innerText = "Unavailable";
     }
-  } catch (e) {
-    console.error("BTC Fetch Error:", e);
-    document.getElementById("btc-balance").innerText = "Unavailable";
   }
-}
 
-// 
-// Call BTC Balance
-fetchBTCBalance();
+  // Solana (AUR) Balance
+  async function fetchSolAURBalance() {
+    const wallet = "h94Qc7kboXBSNADxPr74W9fUr3HXRV9ADd1DGDESKX8";
+    const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF";
 
-// Solana (AUR) Balance
-async function fetchSolAURBalance() {
-  const wallet = "h94Qc7kboXBSNADxPr74W9fUr3HXRV9ADd1DGDESKX8";
-  const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF";
+    const body = {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        wallet,
+        { "mint": mint },
+        { "encoding": "jsonParsed" }
+      ]
+    };
 
-  const body = {
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "getTokenAccountsByOwner",
-    "params": [
-      wallet,
-      { "mint": mint },
-      { "encoding": "jsonParsed" }
-    ]
-  };
-
-  try {
-    const res = await fetch("https://solana-api.projectserum.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-    let balance = 0;
-
-    if (data.result && data.result.value.length > 0) {
-      data.result.value.forEach(acc => {
-        const info = acc.account.data.parsed.info.tokenAmount;
-        if (info.uiAmount != null) {
-          balance += info.uiAmount;
-        } else {
-          balance += info.amount / Math.pow(10, info.decimals);
-        }
+    try {
+      const res = await fetch("https://solana-api.projectserum.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
       });
+
+      const data = await res.json();
+      let balance = 0;
+
+      if (data.result && data.result.value.length > 0) {
+        data.result.value.forEach(acc => {
+          const info = acc.account.data.parsed.info.tokenAmount;
+          balance += info.uiAmount ?? (info.amount / Math.pow(10, info.decimals));
+        });
+      }
+
+      document.getElementById("aur-balance").innerText = `${balance.toLocaleString()} AUR`;
+
+    } catch (e) {
+      console.error("AUR Fetch Error:", e);
+      document.getElementById("aur-balance").innerText = "Unavailable";
     }
-
-    document.getElementById("aur-balance").innerText = `${balance.toLocaleString()} AUR`;
-
-  } catch (e) {
-    console.error("AUR Fetch Error:", e);
-    document.getElementById("aur-balance").innerText = "Unavailable";
   }
-}
 
-// Call once on page load
-fetchSolAURBalance();
+  // Aufruf einmalig
+  fetchBTCBalance();
+  fetchSolAURBalance();
 </script>
+
 
 </body>
 </html>
