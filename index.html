@@ -335,7 +335,7 @@ A new kind of token.</em></p>
     </a>
   </footer>
 
-  <script>
+ <script>
   // Toggle für alle Sektionen
   document.querySelectorAll('section h2').forEach(header => {
     header.addEventListener('click', () => {
@@ -379,6 +379,7 @@ A new kind of token.</em></p>
     };
 
     try {
+      // Stabile CORS-freundliche RPC
       const res = await fetch("https://solana-api.projectserum.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -403,10 +404,11 @@ A new kind of token.</em></p>
     }
   }
 
-  // Aufruf einmalig
+  // Aufruf beim Laden der Seite
   fetchBTCBalance();
   fetchSolAURBalance();
 </script>
+
 
 
 </body>
