@@ -346,7 +346,7 @@ A new kind of token.</em></p>
 
  // 
 async function fetchBTCBalance() {
-  const btcAddress = "bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9";
+  const btcAddress = "bc1qz7h6f0q5e8rzej2pay60l7lglp5dxy760j6uhc";
   try {
     const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${btcAddress}/balance?nocache=${Date.now()}`);
     const data = await res.json();
