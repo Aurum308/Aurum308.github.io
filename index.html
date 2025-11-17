@@ -383,16 +383,13 @@ fetchBTCBalance();
         body: JSON.stringify(body)
       });
       const data = await res.json();
-      let balance = 0;
-      if (data.result && data.result.value.length > 0) {
-        const info = data.result.value[0].account.data.parsed.info.tokenAmount;
-        balance = info.amount / Math.pow(10, info.decimals);
-      }
-      document.getElementById("aur-balance").innerText = `${balance} AUR`;
-    } catch (e) {
-      document.getElementById("aur-balance").innerText = "Unavailable";
-    }
-  }
+     let balance = 0;
+if (data.result && data.result.value.length > 0) {
+  data.result.value.forEach(acc => {
+    const info = acc.account.data.parsed.info.tokenAmount;
+    balance += info.amount / Math.pow(10, info.decimals);
+  });
+}
 
   // Alle Balances laden
   fetchBTCBalance();
