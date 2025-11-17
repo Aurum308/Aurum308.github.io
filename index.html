@@ -335,7 +335,7 @@ A new kind of token.</em></p>
   // BTC Balance
   async function fetchBTCBalance() {
     try {
-      const res = await fetch("https://api.blockcypher.com/v1/btc/main/addrs/bc1qxvea7muxrshy40szzjmdq2hvp2u6dzn2tnm6wx/balance");
+      const res = await fetch("https://api.blockcypher.com/v1/btc/main/addrs/	bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9/balance");
       const data = await res.json();
       const btc = data.final_balance / 100000000;
       document.getElementById("btc-balance").innerText = `${btc} BTC`;
