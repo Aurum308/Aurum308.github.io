@@ -363,9 +363,10 @@ async function fetchBTCBalance() {
 }
 
 // 
+// Call BTC Balance
 fetchBTCBalance();
 
- // Solana (AUR) Balance
+// Solana (AUR) Balance
 async function fetchSolAURBalance() {
   const wallet = "h94Qc7kboXBSNADxPr74W9fUr3HXRV9ADd1DGDESKX8";
   const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF";
@@ -382,7 +383,7 @@ async function fetchSolAURBalance() {
   };
 
   try {
-    const res = await fetch("https://api.mainnet-beta.solana.com", {
+    const res = await fetch("https://solana-api.projectserum.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
@@ -394,7 +395,11 @@ async function fetchSolAURBalance() {
     if (data.result && data.result.value.length > 0) {
       data.result.value.forEach(acc => {
         const info = acc.account.data.parsed.info.tokenAmount;
-        balance += parseFloat(info.uiAmount); // uiAmount statt amount/decimals
+        if (info.uiAmount != null) {
+          balance += info.uiAmount;
+        } else {
+          balance += info.amount / Math.pow(10, info.decimals);
+        }
       });
     }
 
@@ -406,12 +411,8 @@ async function fetchSolAURBalance() {
   }
 }
 
-
 // Call once on page load
-fetchBTCBalance();
 fetchSolAURBalance();
-
-
 </script>
 
 </body>
