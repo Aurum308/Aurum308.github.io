@@ -368,7 +368,7 @@ fetchBTCBalance();
  // Solana (AUR) Balance
 async function fetchSolAURBalance() {
   const wallet = "h94Qc7kboXBSNADxPr74W9fUr3HXRV9ADd1DGDESKX8";
-  const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF"; // Dein Solana AUR Token
+  const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF";
 
   const body = {
     "jsonrpc": "2.0",
@@ -387,23 +387,25 @@ async function fetchSolAURBalance() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
+
     const data = await res.json();
     let balance = 0;
+
     if (data.result && data.result.value.length > 0) {
       data.result.value.forEach(acc => {
         const info = acc.account.data.parsed.info.tokenAmount;
-        balance += info.amount / Math.pow(10, info.decimals);
+        balance += parseFloat(info.uiAmount); // uiAmount statt amount/decimals
       });
     }
 
-    // Balance in HTML anzeigen
-    document.getElementById("aur-balance").innerText = `${balance} AUR`;
+    document.getElementById("aur-balance").innerText = `${balance.toLocaleString()} AUR`;
 
   } catch (e) {
     console.error("AUR Fetch Error:", e);
     document.getElementById("aur-balance").innerText = "Unavailable";
   }
 }
+
 
 // Call once on page load
 fetchBTCBalance();
