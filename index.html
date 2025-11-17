@@ -332,29 +332,26 @@ A new kind of token.</em></p>
     });
   });
 
-  // BTC Balance
-  async function fetchBTCBalance() {
-    try {
-      const res = await fetch("https://api.blockcypher.com/v1/btc/main/addrs/bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9/balance");
-      const data = await res.json();
+ // 
+async function fetchBTCBalance() {
+  const btcAddress = "bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9";
+  try {
+    const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${btcAddress}/balance?nocache=${Date.now()}`);
+    const data = await res.json();
+    if (data && data.final_balance !== undefined) {
       const btc = data.final_balance / 100000000;
       document.getElementById("btc-balance").innerText = `${btc} BTC`;
-    } catch (e) {
+    } else {
       document.getElementById("btc-balance").innerText = "Unavailable";
     }
+  } catch (e) {
+    console.error("BTC Fetch Error:", e);
+    document.getElementById("btc-balance").innerText = "Unavailable";
   }
+}
 
-  // ETH Balance
-  async function fetchETHBalance() {
-    try {
-      const res = await fetch("https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x890E2f6c06c8e007e6f60D3eE0A9EdFB4134e30D&address=0x2E13705BC3591BB67ef7a4c27427dbDFE4F7597c&tag=latest&apikey=CQQ3FBBS9UDIHE36IVNYRTFF9C9JD1TSTY");
-      const data = await res.json();
-      const balance = parseFloat(data.result) / 1e18;
-      document.getElementById("eth-balance").innerText = `${balance.toFixed(4)} AUR`;
-    } catch (e) {
-      document.getElementById("eth-balance").innerText = "Unavailable";
-    }
-  }
+// 
+fetchBTCBalance();
 
   // Solana (AUR) Balance
   async function fetchSolAURBalance() {
@@ -392,7 +389,6 @@ A new kind of token.</em></p>
 
   // Alle Balances laden
   fetchBTCBalance();
-  fetchETHBalance();
   fetchSolAURBalance();
 </script>
 
