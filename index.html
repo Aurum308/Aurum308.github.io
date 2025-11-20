@@ -289,7 +289,7 @@ AURUM is not just a meme token — it is a community project that believes in th
     </a>
   </footer>
 
- <script>
+<script>
   // Toggle für alle Sektionen
   document.querySelectorAll('section h2').forEach(header => {
     header.addEventListener('click', () => {
@@ -299,71 +299,64 @@ AURUM is not just a meme token — it is a community project that believes in th
   });
 
   // ZEC Balance
-async function fetchZECBalance() {
-  const zecAddress = "CSW3ABdmM69Tr5yet9cvNEyA5pYTvEppML3AsKqW3Lbc"; // Deine ZEC-Adresse
-  try {
-    const res = await fetch(`https://sochain.com/api/v2/get_address_balance/ZEC/${zecAddress}?nocache=${Date.now()}`);
-    const data = await res.json();
-    if (data && data.data && data.data.confirmed_balance !== undefined) {
-      const zec = parseFloat(data.data.confirmed_balance);
-      document.getElementById("zec-balance").innerText = `${zec} ZEC`;
-    } else {
+  async function fetchZECBalance() {
+    const zecAddress = "CSW3ABdmM69Tr5yet9cvNEyA5pYTvEppML3AsKqW3Lbc"; // Deine ZEC-Adresse
+    try {
+      const res = await fetch(`https://sochain.com/api/v2/get_address_balance/ZEC/${zecAddress}?nocache=${Date.now()}`);
+      const data = await res.json();
+      if (data && data.data && data.data.confirmed_balance !== undefined) {
+        const zec = parseFloat(data.data.confirmed_balance);
+        document.getElementById("zec-balance").innerText = `${zec} ZEC`;
+      } else {
+        document.getElementById("zec-balance").innerText = "Unavailable";
+      }
+    } catch (e) {
+      console.error("ZEC Fetch Error:", e);
       document.getElementById("zec-balance").innerText = "Unavailable";
     }
-  } catch (e) {
-    console.error("ZEC Fetch Error:", e);
-    document.getElementById("zec-balance").innerText = "Unavailable";
   }
-}
 
-// Solana (AUR) Balance
-async function fetchSolAURBalance() {
-  const wallet = "h94Qc7kboXBSNADxPr74W9fUr3HXRV9ADd1DGDESKX8";
-  const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF";
+  // Solana (AUR) Balance
+  async function fetchSolAURBalance() {
+    const wallet = "CSW3ABdmM69Tr5yet9cvNEyA5pYTvEppML3AsKqW3Lbc"; // Dieselbe Wallet wie ZEC
+    const mint = "8h8T2UpyU9W2dDEwYyVPXRXenzWuQNoqMkxZ2HrtHasF"; // Dein Solana AUR Token
 
-  const body = {
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "getTokenAccountsByOwner",
-    "params": [
-      wallet,
-      { "mint": mint },
-      { "encoding": "jsonParsed" }
-    ]
-  };
+    const body = {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        wallet,
+        { "mint": mint },
+        { "encoding": "jsonParsed" }
+      ]
+    };
 
-  try {
-    const res = await fetch("https://cors-anywhere.herokuapp.com/https://solana-api.projectserum.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-    let balance = 0;
-
-    if (data.result && data.result.value.length > 0) {
-      data.result.value.forEach(acc => {
-        const info = acc.account.data.parsed.info.tokenAmount;
-        balance += info.uiAmount ?? (info.amount / Math.pow(10, info.decimals));
+    try {
+      const res = await fetch("https://api.mainnet-beta.solana.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
       });
+      const data = await res.json();
+      let balance = 0;
+      if (data.result && data.result.value.length > 0) {
+        data.result.value.forEach(acc => {
+          const info = acc.account.data.parsed.info.tokenAmount;
+          balance += info.uiAmount ?? (info.amount / Math.pow(10, info.decimals));
+        });
+      }
+      document.getElementById("aur-balance").innerText = `${balance.toLocaleString()} AUR`;
+    } catch (e) {
+      console.error("AUR Fetch Error:", e);
+      document.getElementById("aur-balance").innerText = "Unavailable";
     }
-
-    document.getElementById("aur-balance").innerText = `${balance.toLocaleString()} AUR`;
-
-  } catch (e) {
-    console.error("AUR Fetch Error:", e);
-    document.getElementById("aur-balance").innerText = "Unavailable";
   }
-}
 
-// Aufruf beim Laden der Seite
-fetchZECBalance();
-fetchSolAURBalance();
-
+  // Aufruf beim Laden der Seite
+  fetchZECBalance();
+  fetchSolAURBalance();
 </script>
-
-
 
 </body>
 </html>
