@@ -298,9 +298,9 @@ AURUM is not just a meme token — it is a community project that believes in th
     });
   });
 
-  // ZEC Balance
+ // ZEC Balance
 async function fetchZECBalance() {
-  const zecAddress = "0x7488596624f27cc1aac21107ebe355fbbdf6b8bf"; 
+  const zecAddress = "0x7488596624f27cc1aac21107ebe355fbbdf6b8bf";
   try {
     const res = await fetch(`https://sochain.com/api/v2/get_address_balance/ZEC/${zecAddress}?nocache=${Date.now()}`);
     const data = await res.json();
@@ -318,8 +318,8 @@ async function fetchZECBalance() {
 
 // BNB Chain (AUR) Balance – BEP20
 async function fetchAURBalance() {
-  const wallet = "0x7488596624f27cc1aac21107ebe355fbbdf6b8bf"; 
-  const token = "DEIN_BEP20_AUR_TOKEN_CONTRACT"; // hier deinen AUR Contract einsetzen
+  const wallet = "0x7488596624f27cc1aac21107ebe355fbbdf6b8bf";
+  const token = "0x2e93700425f365FCE5c1A75cFEdc320d8874034B";
 
   const body = {
     "jsonrpc": "2.0",
@@ -355,6 +355,7 @@ async function fetchAURBalance() {
 // Aufruf beim Laden der Seite
 fetchZECBalance();
 fetchAURBalance();
+
   
 </script>
 
