@@ -24,7 +24,7 @@
       background-color: #111;
       color: #fff;
       line-height: 1.6;
-      padding-bottom: 120px; /* Platz für festen Footer */
+      padding-bottom: 120px;
     }
     header {
       text-align: center;
@@ -91,7 +91,9 @@
   <section>
     <h2>Proof of Value</h2>
     <p>Live Zcash Reserve:</p>
-    <div id="ZEC-balance">Loading ZEC balance...</div>
+
+    <!-- FIX HIER: war ZEC-balance -->
+    <div id="zec-balance">Loading ZEC balance...</div>
   </section>
 
   <section>
@@ -306,6 +308,8 @@ async function fetchZECBalance() {
     const data = await res.json();
     if (data && data.data && data.data.confirmed_balance !== undefined) {
       const zec = parseFloat(data.data.confirmed_balance);
+
+      // FIX funktioniert jetzt
       document.getElementById("zec-balance").innerText = `${zec} ZEC`;
     } else {
       document.getElementById("zec-balance").innerText = "Unavailable";
@@ -355,6 +359,12 @@ async function fetchAURBalance() {
 // Aufruf beim Laden der Seite
 fetchZECBalance();
 fetchAURBalance();
+
+  
+</script>
+
+</body>
+</html>
 
   
 </script>
